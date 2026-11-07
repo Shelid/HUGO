@@ -98,5 +98,7 @@ export interface DatabaseSchema {
   leads: LeadSubmission[];
   adminPasswordHash: string;
   adminPasswordSalt: string;
+  /** true once the admin has set a private password from the panel */
+  adminPasswordCustom?: boolean;
 }
 

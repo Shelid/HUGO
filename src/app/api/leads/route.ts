@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
       ? body.photos.map((p: unknown) => sanitizeText(p, 400)).filter(Boolean).slice(0, 6)
       : [];
 
-    const created = addLeadSubmission({
+    const created = await addLeadSubmission({
       name,
       phone,
       email,
@@ -120,6 +120,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  await syncFromNetlifyBlobs();
   const isAdmin = await isAuthenticatedAdmin();
   if (!isAdmin) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
@@ -135,7 +136,7 @@ export async function PATCH(request: NextRequest) {
     ) {
       return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
     }
-    updateLeadStatus(id, status);
+    await updateLeadStatus(id, status);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: 'Error al actualizar estado' }, { status: 500 });

@@ -47,7 +47,8 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
           src={service.image}
           alt={`${service.title} en Asturias — RADECO`}
           loading="lazy"
-          className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 filter contrast-[1.03]"
+          decoding="async"
+          className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-obsidian/70 via-obsidian/15 to-transparent opacity-65 group-hover:opacity-45 transition-opacity duration-500" />
         <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">

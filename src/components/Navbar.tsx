@@ -23,7 +23,8 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 36);
+      const isPast = window.scrollY > 36;
+      setScrolled((prev) => (prev === isPast ? prev : isPast));
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });

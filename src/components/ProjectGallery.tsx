@@ -91,6 +91,7 @@ export function ProjectGallery({ images, projectTitle }: ProjectGalleryProps) {
               src={img.url}
               alt={img.alt || `${projectTitle} — Imagen ${idx + 1}`}
               loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-obsidian/80 via-transparent to-transparent opacity-80 group-hover:opacity-65 transition-opacity" />

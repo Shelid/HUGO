@@ -5,7 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { CookieConsent } from '@/components/CookieConsent';
-import { getCompanySettings } from '@/lib/db';
+import { getCompanySettings, loadDb } from '@/lib/db';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -73,11 +73,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await loadDb();
   const settings = getCompanySettings();
 
   const jsonLd = {

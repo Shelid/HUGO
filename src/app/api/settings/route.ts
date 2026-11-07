@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const updated = updateCompanySettings({
+    const updated = await updateCompanySettings({
       phone: body.phone !== undefined ? sanitizeText(body.phone, 50) : undefined,
       whatsappNumber:
         body.whatsappNumber !== undefined

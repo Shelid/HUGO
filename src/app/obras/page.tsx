@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { getPublishedProjects, syncFromNetlifyBlobs } from '@/lib/db';
+import { getPublishedProjects, loadDb } from '@/lib/db';
 import { ProjectsCatalogClient } from '@/components/ProjectsCatalogClient';
 import { QualityBadge } from '@/components/QualityBadge';
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ObrasPage() {
-  await syncFromNetlifyBlobs();
+  await loadDb();
   const projects = getPublishedProjects();
 
   return (

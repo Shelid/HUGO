@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  checkAdminPassword,
   checkRateLimit,
   createSessionToken,
+  getClientIp,
   SESSION_COOKIE_NAME,
-  SESSION_DURATION_MS,
-  verifyPassword,
+  sessionCookieOptions,
 } from '@/lib/auth';
-import { getAdminCredentials } from '@/lib/db';
+import { syncFromNetlifyBlobs } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
-  const ip =
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    request.headers.get('x-real-ip') ||
-    'local-ip';
+  const ip = getClientIp(request.headers);
 
   const rate = checkRateLimit(`admin-login:${ip}`, 6, 1000 * 60 * 10);
   if (!rate.allowed) {
@@ -25,6 +23,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    await syncFromNetlifyBlobs();
     const body = await request.json();
     const password = typeof body.password === 'string' ? body.password : '';
 
@@ -35,8 +34,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { hash, salt } = getAdminCredentials();
-    const isValid = verifyPassword(password, hash, salt);
+    const isValid = checkAdminPassword(password);
 
     if (!isValid) {
       return NextResponse.json(
@@ -48,13 +46,7 @@ export async function POST(request: NextRequest) {
     const token = createSessionToken('radeco_admin');
     const response = NextResponse.json({ success: true });
 
-    response.cookies.set(SESSION_COOKIE_NAME, token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: Math.floor(SESSION_DURATION_MS / 1000),
-    });
+    response.cookies.set(SESSION_COOKIE_NAME, token, sessionCookieOptions);
 
     return response;
   } catch {

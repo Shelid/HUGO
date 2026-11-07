@@ -53,20 +53,33 @@ export function ProcessTimeline() {
   const [fillRatio, setFillRatio] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
+    let ticking = false;
+
+    const updateProgress = () => {
+      ticking = false;
       if (!sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
       const windowH = window.innerHeight;
+      if (rect.bottom < -100 || rect.top > windowH + 100) return;
+
       const start = windowH * 0.75;
       const total = rect.height - windowH * 0.25;
       const current = start - rect.top;
-      const ratio = Math.max(0, Math.min(1, current / Math.max(1, total)));
-      setFillRatio(ratio);
+      const rawRatio = Math.max(0, Math.min(1, current / Math.max(1, total)));
+      const quantized = Math.round(rawRatio * 100) / 100;
+      setFillRatio((prev) => (prev === quantized ? prev : quantized));
     };
 
-    onScroll();
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateProgress);
+      }
+    };
+
+    updateProgress();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    window.addEventListener('resize', onScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);

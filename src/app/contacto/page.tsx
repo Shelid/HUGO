@@ -8,7 +8,7 @@ import {
   MessageCircle,
   Phone,
 } from 'lucide-react';
-import { getCompanySettings } from '@/lib/db';
+import { getCompanySettings, loadDb } from '@/lib/db';
 import { ContactForm } from '@/components/ContactForm';
 import { AsturiasLocationMap } from '@/components/AsturiasLocationMap';
 
@@ -20,7 +20,8 @@ export const metadata: Metadata = {
     'Contacte con RADECO en el Principado de Asturias. Teléfono, WhatsApp, correo electrónico y formulario para solicitar presupuesto de cubiertas, tejados y terrazas.',
 };
 
-export default function ContactoPage() {
+export default async function ContactoPage() {
+  await loadDb();
   const settings = getCompanySettings();
   const whatsappHref = `https://wa.me/${settings.whatsappNumber.replace(
     /[^\d]/g,

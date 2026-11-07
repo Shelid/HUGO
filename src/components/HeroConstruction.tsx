@@ -102,41 +102,59 @@ export function HeroConstruction() {
   }, []);
 
   useEffect(() => {
-    let rafId: number;
+    let rafId: number | null = null;
+
+    const tick = () => {
+      const diff = targetProgressRef.current - currentProgressRef.current;
+      if (Math.abs(diff) > 0.0015) {
+        currentProgressRef.current += diff * (reducedMotion ? 1 : 0.18);
+        setProgress(currentProgressRef.current);
+        rafId = requestAnimationFrame(tick);
+      } else {
+        if (currentProgressRef.current !== targetProgressRef.current) {
+          currentProgressRef.current = targetProgressRef.current;
+          setProgress(currentProgressRef.current);
+        }
+        rafId = null;
+      }
+    };
+
+    const startTickIfNeeded = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
 
     const updateTargetFromScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
+      // Skip work if completely scrolled past viewport
+      if (rect.bottom < -100 && targetProgressRef.current === 1) {
+        return;
+      }
       const scrollableHeight = rect.height - window.innerHeight;
       if (scrollableHeight <= 0) {
         targetProgressRef.current = 0;
         return;
       }
       const scrolled = -rect.top;
-      targetProgressRef.current = clamp01(scrolled / scrollableHeight);
-    };
-
-    const tick = () => {
-      const diff = targetProgressRef.current - currentProgressRef.current;
-      if (Math.abs(diff) > 0.0005) {
-        currentProgressRef.current += diff * (reducedMotion ? 1 : 0.14);
-        setProgress(currentProgressRef.current);
-      } else if (currentProgressRef.current !== targetProgressRef.current) {
-        currentProgressRef.current = targetProgressRef.current;
-        setProgress(currentProgressRef.current);
+      const nextTarget = clamp01(scrolled / scrollableHeight);
+      if (Math.abs(nextTarget - targetProgressRef.current) > 0.0005) {
+        targetProgressRef.current = nextTarget;
+        startTickIfNeeded();
       }
-      rafId = requestAnimationFrame(tick);
     };
 
     updateTargetFromScroll();
     window.addEventListener('scroll', updateTargetFromScroll, { passive: true });
-    window.addEventListener('resize', updateTargetFromScroll);
-    rafId = requestAnimationFrame(tick);
+    window.addEventListener('resize', updateTargetFromScroll, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', updateTargetFromScroll);
       window.removeEventListener('resize', updateTargetFromScroll);
-      cancelAnimationFrame(rafId);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, [reducedMotion]);
 
@@ -179,7 +197,7 @@ export function HeroConstruction() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[340vh] md:h-[430vh] bg-obsidian text-alabaster select-none"
+      className="relative w-full h-[270vh] md:h-[380vh] bg-obsidian text-alabaster select-none"
       aria-label="Presentación interactiva de construcción de cubierta RADECO"
     >
       {/* Sticky Viewport Stage */}
@@ -195,20 +213,24 @@ export function HeroConstruction() {
         />
 
         {/* Background Layer 2: Completed Architectural Roof Photo Crossfade at Phase 6 */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-          style={{
-            opacity: pCompression * 0.42,
-            transform: `scale(${1.08 - pFinalReveal * 0.06})`,
-          }}
-        >
-          <img
-            src="/images/projects/oviedo-after.jpg"
-            alt="Cubierta rehabilitada por RADECO en Asturias"
-            className="w-full h-full object-cover object-center filter contrast-110 brightness-75"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/80 to-obsidian/65" />
-        </div>
+        {pCompression > 0.01 && (
+          <div
+            className="absolute inset-0 pointer-events-none will-change-transform"
+            style={{
+              opacity: pCompression * 0.42,
+              transform: `scale(${1.06 - pFinalReveal * 0.05})`,
+            }}
+          >
+            <img
+              src="/images/projects/oviedo-after.jpg"
+              alt="Cubierta rehabilitada por RADECO en Asturias"
+              decoding="async"
+              loading="eager"
+              className="w-full h-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/80 to-obsidian/65" />
+          </div>
+        )}
 
         {/* Top Technical Telemetry Bar (below fixed Navbar) */}
         <div className="relative z-20 pt-24 sm:pt-28 px-4 sm:px-8 max-w-[1400px] w-full mx-auto flex items-center justify-between text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-alabaster/60">
@@ -279,16 +301,15 @@ export function HeroConstruction() {
 
             {/* Right / Center Column: 3D Isometric Architectural Roof Assembly SVG */}
             <div
-              className="lg:col-span-7 relative flex items-center justify-center"
+              className="lg:col-span-7 relative flex items-center justify-center will-change-transform"
               style={{
                 opacity: Math.max(0.18, 1 - pFinalReveal * 0.78),
-                transform: `translateY(${cameraTranslateY}px) scale(${cameraScale}) rotate(${cameraRotateZ}deg)`,
-                transition: reducedMotion ? 'none' : 'transform 60ms linear',
+                transform: `translate3d(0, ${cameraTranslateY}px, 0) scale(${cameraScale}) rotate(${cameraRotateZ}deg)`,
               }}
             >
               <svg
                 viewBox="0 0 800 560"
-                className="w-full max-w-[680px] h-auto overflow-visible drop-shadow-[0_28px_60px_rgba(0,0,0,0.75)]"
+                className="w-full max-w-[680px] h-auto overflow-visible"
                 role="img"
                 aria-label="Arquitectura multicapa de una cubierta RADECO"
               >

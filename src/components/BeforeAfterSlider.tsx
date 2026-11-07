@@ -93,18 +93,22 @@ export function BeforeAfterSlider({
         <img
           src={afterImage}
           alt={`Después — ${title}`}
+          loading="lazy"
+          decoding="async"
           draggable={false}
           className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
         />
 
         {/* Foreground Clipped: BEFORE Image */}
         <div
-          className="absolute inset-0 overflow-hidden pointer-events-none select-none"
+          className="absolute inset-0 overflow-hidden pointer-events-none select-none will-change-[clip-path]"
           style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
         >
           <img
             src={beforeImage}
             alt={`Antes — ${title}`}
+            loading="lazy"
+            decoding="async"
             draggable={false}
             className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
           />

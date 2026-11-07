@@ -45,7 +45,7 @@ async function persistMediaFile(
 ): Promise<void> {
   // 1. Try saving to Netlify Blobs (production persistence on Netlify)
   try {
-    const store = getStore('radeco-media');
+    const store = getStore({ name: 'radeco-media', consistency: 'strong' });
     const arrayBuffer = data.buffer.slice(
       data.byteOffset,
       data.byteOffset + data.byteLength

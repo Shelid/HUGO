@@ -42,6 +42,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
           src={project.coverImage}
           alt={`${project.title} — ${project.municipality}, ${project.province}`}
           loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-obsidian/75 via-obsidian/15 to-transparent opacity-70 group-hover:opacity-50 transition-opacity duration-500" />

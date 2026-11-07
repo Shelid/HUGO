@@ -14,7 +14,7 @@ import {
 import {
   getProjectBySlug,
   getPublishedProjects,
-  syncFromNetlifyBlobs,
+  loadDb,
 } from '@/lib/db';
 import { isAuthenticatedAdmin } from '@/lib/auth';
 import { BeforeAfterSlider } from '@/components/BeforeAfterSlider';
@@ -28,7 +28,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata(context: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  await syncFromNetlifyBlobs();
+  await loadDb();
   const { slug } = await context.params;
   const isAdmin = await isAuthenticatedAdmin();
   const project = getProjectBySlug(slug, isAdmin);
@@ -69,7 +69,7 @@ export async function generateMetadata(context: {
 export default async function ObraDetailPage(context: {
   params: Promise<{ slug: string }>;
 }) {
-  await syncFromNetlifyBlobs();
+  await loadDb();
   const { slug } = await context.params;
   const isAdmin = await isAuthenticatedAdmin();
   const project = getProjectBySlug(slug, isAdmin);
@@ -167,6 +167,8 @@ export default async function ObraDetailPage(context: {
             <img
               src={project.coverImage}
               alt={`${project.title} en ${project.municipality}, ${project.province}`}
+              decoding="async"
+              fetchPriority="high"
               className="w-full h-full object-cover object-center"
             />
             <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-obsidian/90 via-obsidian/45 to-transparent p-6 sm:p-8 flex flex-wrap items-end justify-between gap-4 text-alabaster">

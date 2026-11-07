@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString(),
     };
 
-    const created = createOrUpdateProject(newProject);
+    const created = await createOrUpdateProject(newProject);
     return NextResponse.json({ project: created }, { status: 201 });
   } catch {
     return NextResponse.json({ error: 'Error al crear la obra.' }, { status: 500 });

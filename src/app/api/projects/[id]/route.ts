@@ -169,7 +169,7 @@ export async function PUT(
       updatedAt: new Date().toISOString(),
     };
 
-    const saved = createOrUpdateProject(updated);
+    const saved = await createOrUpdateProject(updated);
     return NextResponse.json({ project: saved });
   } catch {
     return NextResponse.json({ error: 'Error al actualizar la obra.' }, { status: 500 });
@@ -180,13 +180,14 @@ export async function DELETE(
   _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  await syncFromNetlifyBlobs();
   const isAdmin = await isAuthenticatedAdmin();
   if (!isAdmin) {
     return NextResponse.json({ error: 'No autorizado.' }, { status: 401 });
   }
 
   const { id } = await context.params;
-  const deleted = deleteProjectById(id);
+  const deleted = await deleteProjectById(id);
   if (!deleted) {
     return NextResponse.json({ error: 'Obra no encontrada.' }, { status: 404 });
   }

@@ -9,7 +9,7 @@ import {
   Sparkles,
   UserCheck,
 } from 'lucide-react';
-import { getCompanySettings } from '@/lib/db';
+import { getCompanySettings, loadDb } from '@/lib/db';
 import { QualityBadge } from '@/components/QualityBadge';
 import { WarrantyCard } from '@/components/WarrantyCard';
 import { ProcessTimeline } from '@/components/ProcessTimeline';
@@ -22,7 +22,8 @@ export const metadata: Metadata = {
     'Conozca RADECO: especialistas en cubiertas, tejados, terrazas e impermeabilización en el Principado de Asturias. Precisión técnica, Sello de Calidad y garantía.',
 };
 
-export default function EmpresaPage() {
+export default async function EmpresaPage() {
+  await loadDb();
   const settings = getCompanySettings();
 
   return (

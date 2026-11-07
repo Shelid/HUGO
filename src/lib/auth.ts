@@ -1,46 +1,49 @@
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
+import { getAdminCredentials, syncFromNetlifyBlobs } from './db';
+import { safeEqualStrings, verifyPassword } from './password';
 
 const SESSION_COOKIE_NAME = 'radeco_admin_session';
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 12; // 12 hours
 
-function getSecretKey(): string {
-  return (
-    process.env.RADECO_AUTH_SECRET ||
-    'radeco-asturias-architectural-security-key-2026-hmac-sha256'
-  );
+/**
+ * Session signing key. Never hard-coded: it is derived from secrets that are NOT in the
+ * public repository (env vars, or the private password hash stored in Netlify Blobs).
+ * Changing the admin password therefore invalidates every existing session.
+ */
+function getSessionSecret(): string {
+  if (process.env.RADECO_AUTH_SECRET) return process.env.RADECO_AUTH_SECRET;
+  const creds = getAdminCredentials();
+  const material =
+    creds.custom || !process.env.RADECO_ADMIN_PASSWORD
+      ? `db|${creds.hash}|${creds.salt}`
+      : `env|${process.env.RADECO_ADMIN_PASSWORD}`;
+  return crypto.createHash('sha256').update(`radeco-session|${material}`).digest('hex');
 }
 
-export function hashPassword(password: string, salt?: string): { hash: string; salt: string } {
-  const usedSalt = salt || crypto.randomBytes(16).toString('hex');
-  const derivedKey = crypto.scryptSync(password, usedSalt, 64);
-  return {
-    hash: derivedKey.toString('hex'),
-    salt: usedSalt,
-  };
+/** True while the admin still uses the public default password. */
+export function isUsingDefaultPassword(): boolean {
+  return !getAdminCredentials().custom && !process.env.RADECO_ADMIN_PASSWORD;
 }
 
-export function verifyPassword(password: string, storedHash: string, storedSalt: string): boolean {
-  try {
-    const derivedKey = crypto.scryptSync(password, storedSalt, 64);
-    const storedBuffer = Buffer.from(storedHash, 'hex');
-    if (derivedKey.length !== storedBuffer.length) return false;
-    return crypto.timingSafeEqual(derivedKey, storedBuffer);
-  } catch {
-    return false;
+export function checkAdminPassword(password: string): boolean {
+  const creds = getAdminCredentials();
+  if (creds.custom) return verifyPassword(password, creds.hash, creds.salt);
+  if (process.env.RADECO_ADMIN_PASSWORD) {
+    return safeEqualStrings(password, process.env.RADECO_ADMIN_PASSWORD);
   }
+  return verifyPassword(password, creds.hash, creds.salt);
 }
 
 export function createSessionToken(username: string): string {
-  const expiresAt = Date.now() + SESSION_DURATION_MS;
   const payload = JSON.stringify({
     sub: username,
-    exp: expiresAt,
+    exp: Date.now() + SESSION_DURATION_MS,
     nonce: crypto.randomBytes(8).toString('hex'),
   });
   const payloadB64 = Buffer.from(payload, 'utf-8').toString('base64url');
   const signature = crypto
-    .createHmac('sha256', getSecretKey())
+    .createHmac('sha256', getSessionSecret())
     .update(payloadB64)
     .digest('base64url');
   return `${payloadB64}.${signature}`;
@@ -52,7 +55,7 @@ export function verifySessionToken(token?: string): { valid: boolean; sub?: stri
   if (!payloadB64 || !signature) return { valid: false };
 
   const expectedSig = crypto
-    .createHmac('sha256', getSecretKey())
+    .createHmac('sha256', getSessionSecret())
     .update(payloadB64)
     .digest('base64url');
 
@@ -63,9 +66,7 @@ export function verifySessionToken(token?: string): { valid: boolean; sub?: stri
       return { valid: false };
     }
     const decoded = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'));
-    if (!decoded.exp || Date.now() > decoded.exp) {
-      return { valid: false };
-    }
+    if (!decoded.exp || Date.now() > decoded.exp) return { valid: false };
     return { valid: true, sub: decoded.sub };
   } catch {
     return { valid: false };
@@ -76,15 +77,25 @@ export async function isAuthenticatedAdmin(): Promise<boolean> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    if (!token) return false;
+    await syncFromNetlifyBlobs(); // latest credentials -> correct signing key
     return verifySessionToken(token).valid;
   } catch {
     return false;
   }
 }
 
+export const sessionCookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax' as const,
+  secure: process.env.NODE_ENV === 'production',
+  path: '/',
+  maxAge: Math.floor(SESSION_DURATION_MS / 1000),
+};
+
 export { SESSION_COOKIE_NAME, SESSION_DURATION_MS };
 
-// Brute-force & anti-spam rate limiting store
+// Brute-force & anti-spam rate limiting store (per serverless instance)
 interface RateRecord {
   count: number;
   resetAt: number;
@@ -113,12 +124,16 @@ export function checkRateLimit(
   }
 
   record.count += 1;
-  rateLimitStore.set(key, record);
-  return {
-    allowed: true,
-    remaining: maxAttempts - record.count,
-    retryAfterSeconds: 0,
-  };
+  return { allowed: true, remaining: maxAttempts - record.count, retryAfterSeconds: 0 };
+}
+
+export function getClientIp(headers: Headers): string {
+  return (
+    headers.get('x-nf-client-connection-ip') ||
+    headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    headers.get('x-real-ip') ||
+    'local-ip'
+  );
 }
 
 export function sanitizeText(input: unknown, maxLength = 2000): string {
@@ -128,6 +143,16 @@ export function sanitizeText(input: unknown, maxLength = 2000): string {
     .replace(/[<>]/g, '')
     .trim()
     .slice(0, maxLength);
+}
+
+/** Only allow site-relative image paths (blocks javascript:, data:, external hosts). */
+export function sanitizeImagePath(input: unknown): string {
+  const value = sanitizeText(input, 500);
+  if (!value) return '';
+  if (/^\/(images|uploads|api\/media|brand)\/[\w\-./]+$/.test(value) && !value.includes('..')) {
+    return value;
+  }
+  return '';
 }
 
 export function slugify(text: string): string {
@@ -142,4 +167,3 @@ export function slugify(text: string): string {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
 }
-

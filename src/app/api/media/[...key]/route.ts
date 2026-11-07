@@ -45,7 +45,7 @@ export async function GET(
 
   // 3. Check Netlify Blobs store in production
   try {
-    const store = getStore('radeco-media');
+    const store = getStore({ name: 'radeco-media', consistency: 'strong' });
     const arrayBuffer = await store.get(blobKey, { type: 'arrayBuffer' });
     if (arrayBuffer) {
       return new NextResponse(Buffer.from(arrayBuffer), {

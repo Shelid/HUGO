@@ -23,7 +23,7 @@ import { SERVICES_DATA } from '@/lib/services-data';
 import {
   getCompanySettings,
   getPublishedProjects,
-  syncFromNetlifyBlobs,
+  loadDb,
 } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -74,7 +74,7 @@ const WHY_RADECO_PILLARS = [
 ];
 
 export default async function HomePage() {
-  await syncFromNetlifyBlobs();
+  await loadDb();
   const projects = getPublishedProjects();
   const settings = getCompanySettings();
   const featuredProjects = projects.slice(0, 4);
