@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { HeroConstruction } from '@/components/HeroConstruction';
 import { ServiceCard } from '@/components/ServiceCard';
+import { WaterproofingCrossSection } from '@/components/WaterproofingCrossSection';
 import { ProcessTimeline } from '@/components/ProcessTimeline';
 import { ProjectCard } from '@/components/ProjectCard';
 import { BeforeAfterSlider } from '@/components/BeforeAfterSlider';
@@ -164,6 +165,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 3B. SIMULACIÓN TÉCNICA EN CORTE TRANSVERSAL (LLUVIA, DRENAJE W1 Y RETENCIÓN TÉRMICA) */}
+      <WaterproofingCrossSection />
 
       {/* 4. SECCIÓN DE PROCESO ("NUESTRO PROCESO") */}
       <ProcessTimeline />

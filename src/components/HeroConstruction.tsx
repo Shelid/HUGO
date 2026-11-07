@@ -140,7 +140,7 @@ export function HeroConstruction() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
     const rect = canvas.getBoundingClientRect();
     const width = Math.max(300, rect.width);
     const height = Math.max(300, rect.height);
@@ -152,6 +152,9 @@ export function HeroConstruction() {
 
     ctx.save();
     ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.lineJoin = 'round';
     ctx.clearRect(0, 0, width, height);
 
     // Stage sub-progresses (0..1)
@@ -292,6 +295,8 @@ export function HeroConstruction() {
         drawPoly([b1, b2, t2, t1], eavesColor, strokeColor, 0.5);
       }
       drawPoly([t0, t1, t2, t3], topColor, strokeColor, 0.65);
+      // Subtle studio bevel highlight along front-top edge for realistic 3D definition
+      drawLine(t1, t2, 'rgba(255,255,255,0.16)', 0.65);
     };
 
     // Helper: Draw a Realistic 3D Cylindrical Roll on the slope at u = rollU from s0 to s1
