@@ -116,8 +116,8 @@ export function WaterproofingCrossSection() {
 
     const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
     const rect = canvas.getBoundingClientRect();
-    const width = Math.max(300, rect.width);
-    const height = Math.max(300, rect.height);
+    const width = Math.max(220, rect.width);
+    const height = Math.max(180, rect.height);
 
     if (
       canvas.width !== Math.round(width * dpr) ||
@@ -973,7 +973,7 @@ export function WaterproofingCrossSection() {
       className="relative w-full h-[280vh] md:h-[340vh] bg-obsidian text-alabaster border-t border-white/10 select-none"
       aria-labelledby="corte-transversal-heading"
     >
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col justify-between">
+      <div className="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden flex flex-col justify-between">
         {/* Background Architectural Grid */}
         <div className="absolute inset-0 bg-arch-grid-dark bg-grid-64 opacity-30 pointer-events-none" />
         <div
@@ -1026,10 +1026,10 @@ export function WaterproofingCrossSection() {
         </div>
 
         {/* Center Main Stage: Left Narrative & Telemetry + Right Cross-Section Zoom Canvas */}
-        <div className="relative z-10 flex-1 flex items-center px-4 sm:px-8 max-w-[1440px] w-full mx-auto overflow-hidden py-2">
-          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+        <div className="relative z-10 flex-1 min-h-0 flex items-center px-4 sm:px-8 max-w-[1440px] w-full mx-auto overflow-hidden py-1 sm:py-2">
+          <div className="w-full h-full flex flex-col lg:grid lg:grid-cols-12 gap-2 sm:gap-5 items-center justify-between">
             {/* Left Column: Zoom Stage Explanation & Live Sensors */}
-            <div className="lg:col-span-5 space-y-2.5 sm:space-y-3 z-20">
+            <div className="w-full lg:col-span-5 shrink-0 space-y-1.5 sm:space-y-3 z-20">
               <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-copper">
                 <span>Zoom Microscópico en Tiempo Real</span>
                 <span>·</span>
@@ -1137,7 +1137,7 @@ export function WaterproofingCrossSection() {
             </div>
 
             {/* Right Column: High-DPI Zoom Cross-Section Canvas */}
-            <div className="lg:col-span-7 relative w-full h-[40vh] sm:h-[50vh] lg:h-[66vh] flex items-center justify-center border border-white/10 bg-[#0D0F13]/80">
+            <div className="lg:col-span-7 relative w-full flex-1 min-h-[190px] lg:h-[66vh] flex items-center justify-center border border-white/10 bg-[#0D0F13]/80">
               <canvas
                 ref={canvasRef}
                 className="w-full h-full block"

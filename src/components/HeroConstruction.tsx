@@ -142,8 +142,8 @@ export function HeroConstruction() {
 
     const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
     const rect = canvas.getBoundingClientRect();
-    const width = Math.max(300, rect.width);
-    const height = Math.max(300, rect.height);
+    const width = Math.max(220, rect.width);
+    const height = Math.max(180, rect.height);
 
     if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
       canvas.width = Math.round(width * dpr);
@@ -171,8 +171,8 @@ export function HeroConstruction() {
     const pFinish = smoothstep(0.86, 0.96, p);
 
     const isMobile = width < 680;
-    const baseScale = Math.min(width / (isMobile ? 10.2 : 11.6), height / (isMobile ? 8.1 : 7.8));
-    const zoom = 1 + Math.sin(p * Math.PI) * 0.055;
+    const baseScale = Math.min(width / (isMobile ? 9.8 : 11.6), height / (isMobile ? 6.9 : 7.8));
+    const zoom = 1 + Math.sin(p * Math.PI) * (isMobile ? 0.035 : 0.055);
     const scale = baseScale * zoom;
 
     // Smooth cinematic camera orbit as construction progresses
@@ -184,7 +184,7 @@ export function HeroConstruction() {
     const cosPitch = Math.cos(pitch);
 
     const centerX = width * (isMobile ? 0.5 : 0.52);
-    const centerY = height * (isMobile ? 0.57 : 0.58);
+    const centerY = height * (isMobile ? 0.55 : 0.58);
 
     const project = (x: number, y: number, z: number): Vec2 => {
       const rx = x * cosYaw - y * sinYaw;
@@ -1496,7 +1496,7 @@ export function HeroConstruction() {
       aria-label="Simulación constructiva 3D interactiva de cubierta RADECO"
     >
       {/* Sticky Fullscreen Stage */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col justify-between">
+      <div className="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden flex flex-col justify-between">
         {/* 1. Architectural Studio Background & Blueprint Grid */}
         <div className="absolute inset-0 bg-arch-grid-dark bg-grid-64 opacity-40 pointer-events-none" />
         <div
@@ -1527,8 +1527,8 @@ export function HeroConstruction() {
         )}
 
         {/* 3. Top Technical Telemetry Bar */}
-        <div className="relative z-20 pt-20 sm:pt-24 px-4 sm:px-8 max-w-[1440px] w-full mx-auto flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-alabaster/70">
-          <div className="flex items-center gap-3">
+        <div className="relative z-20 shrink-0 pt-[68px] sm:pt-24 px-4 sm:px-8 max-w-[1440px] w-full mx-auto flex flex-wrap items-center justify-between gap-1.5 text-[10px] sm:text-xs font-mono uppercase tracking-[0.18em] text-alabaster/70">
+          <div className="flex items-center gap-2 sm:gap-3">
             <span className="inline-block w-2 h-2 rounded-full bg-copper animate-pulse" />
             <span className="text-white font-semibold">
               {activeStage.code} · {activeStage.label}
@@ -1537,11 +1537,11 @@ export function HeroConstruction() {
             <span className="hidden md:inline text-copper">{activeStage.spec}</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setCutawayOpen((v) => !v)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1 border text-[10px] font-mono uppercase tracking-wider transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 border text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-colors ${
                 cutawayOpen
                   ? 'border-copper/60 bg-copper/15 text-alabaster'
                   : 'border-white/15 bg-white/5 text-white/60 hover:text-white'
@@ -1549,62 +1549,62 @@ export function HeroConstruction() {
               title="Alternar ventana de sección técnica multicapa"
             >
               <Eye className="w-3 h-3 text-copper" />
-              <span>{cutawayOpen ? 'Corte Técnico 3D: Activo' : 'Cubierta Cerrada 100%'}</span>
+              <span>{cutawayOpen ? 'Corte 3D: Activo' : 'Cerrada 100%'}</span>
             </button>
 
-            <span className="px-2.5 py-1 bg-white/10 border border-white/15 text-white font-semibold">
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-white/10 border border-white/15 text-white font-semibold">
               {Math.round(uiProgress * 100)}%
             </span>
           </div>
         </div>
 
         {/* 4. Main Interactive Stage: Left Technical HUD + Right 3D Architectural Canvas */}
-        <div className="relative z-10 flex-1 flex items-center px-4 sm:px-8 max-w-[1440px] w-full mx-auto overflow-hidden">
-          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+        <div className="relative z-10 flex-1 min-h-0 flex items-center px-4 sm:px-8 max-w-[1440px] w-full mx-auto overflow-hidden py-1 sm:py-2">
+          <div className="w-full h-full flex flex-col lg:grid lg:grid-cols-12 gap-1.5 sm:gap-4 items-center justify-between">
             {/* Left Column: Engineering Specifications & Layer Selector */}
             <div
-              className="lg:col-span-5 space-y-4 relative z-20 transition-all duration-300"
+              className="w-full lg:col-span-5 shrink-0 space-y-1.5 sm:space-y-3 lg:space-y-4 relative z-20 transition-all duration-300"
               style={{
                 opacity: Math.max(0, 1 - pCardReveal * 1.4),
                 transform: `translate3d(0, ${-pCardReveal * 24}px, 0)`,
                 pointerEvents: pCardReveal > 0.5 ? 'none' : 'auto',
               }}
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/[0.05] border border-white/10 text-[10px] font-mono uppercase tracking-[0.22em] text-copper">
+              <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 bg-white/[0.05] border border-white/10 text-[10px] font-mono uppercase tracking-[0.22em] text-copper">
                 <Layers className="w-3.5 h-3.5" />
                 <span>Ingeniería Constructiva 3D · Paso a Paso</span>
               </div>
 
-              <h1 className="font-display text-2xl sm:text-4xl lg:text-[40px] font-semibold tracking-tight leading-[1.1] text-white">
+              <h1 className="font-display text-lg sm:text-3xl lg:text-[40px] font-semibold tracking-tight leading-[1.12] text-white line-clamp-2 lg:line-clamp-none">
                 {activeStage.title}
               </h1>
 
-              <p className="text-xs sm:text-sm md:text-base text-alabaster/75 leading-relaxed max-w-md">
+              <p className="text-[11px] sm:text-sm md:text-base text-alabaster/75 leading-snug sm:leading-relaxed max-w-md line-clamp-2 lg:line-clamp-none">
                 {activeStage.subtitle}
               </p>
 
               {/* Live Technical Telemetry Box for Current Layer */}
-              <div className="grid grid-cols-2 gap-2.5 max-w-md pt-1">
-                <div className="p-3 bg-white/[0.03] border border-white/10">
-                  <span className="block font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
+              <div className="grid grid-cols-2 gap-2 max-w-md">
+                <div className="px-2.5 py-1.5 sm:p-3 bg-white/[0.03] border border-white/10">
+                  <span className="block font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.18em] text-white/45">
                     Cota / Sección
                   </span>
-                  <span className="font-mono text-xs text-copper font-semibold">
+                  <span className="font-mono text-[10px] sm:text-xs text-copper font-semibold truncate block">
                     {activeStage.thickness}
                   </span>
                 </div>
-                <div className="p-3 bg-white/[0.03] border border-white/10">
-                  <span className="block font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
+                <div className="px-2.5 py-1.5 sm:p-3 bg-white/[0.03] border border-white/10">
+                  <span className="block font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.18em] text-white/45">
                     Sistema Aplicado
                   </span>
-                  <span className="font-mono text-xs text-alabaster font-semibold truncate block">
+                  <span className="font-mono text-[10px] sm:text-xs text-alabaster font-semibold truncate block">
                     {activeStage.material}
                   </span>
                 </div>
               </div>
 
-              {/* Interactive 6-Phase Direct Selector */}
-              <div className="pt-1 grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-w-md">
+              {/* Interactive 6-Phase Direct Selector (3 cols on mobile saves vertical height!) */}
+              <div className="grid grid-cols-3 gap-1 sm:gap-1.5 max-w-md">
                 {CONSTRUCTION_STAGES.map((stage) => {
                   const isCompleted = uiProgress >= stage.range[1];
                   const isCurrent = activeStage.id === stage.id;
@@ -1613,7 +1613,7 @@ export function HeroConstruction() {
                       key={stage.id}
                       type="button"
                       onClick={() => jumpToStage(stage)}
-                      className={`text-left px-2.5 py-2 border text-[10px] font-mono uppercase tracking-wider transition-all flex items-center justify-between ${
+                      className={`text-left px-2 py-1 sm:px-2.5 sm:py-2 border text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-all flex items-center justify-between ${
                         isCurrent
                           ? 'border-copper bg-copper/20 text-white shadow-[0_0_20px_rgba(184,93,59,0.25)]'
                           : isCompleted
@@ -1624,7 +1624,7 @@ export function HeroConstruction() {
                       <span className="truncate">
                         0{stage.id} {stage.label.split(' ')[0]}
                       </span>
-                      {isCompleted && <CheckCircle2 className="w-3 h-3 text-copper shrink-0" />}
+                      {isCompleted && <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-copper shrink-0" />}
                     </button>
                   );
                 })}
@@ -1633,7 +1633,7 @@ export function HeroConstruction() {
 
             {/* Right / Full Column: High-DPI 3D Axonometric Architectural Canvas */}
             <div
-              className="lg:col-span-7 relative w-full h-[46vh] sm:h-[56vh] lg:h-[74vh] flex items-center justify-center"
+              className="lg:col-span-7 relative w-full flex-1 min-h-[210px] lg:h-[74vh] flex items-center justify-center"
               style={{
                 opacity: Math.max(0.22, 1 - pCardReveal * 0.72),
                 transform: `scale(${1 - pCardReveal * 0.04})`,
@@ -1721,8 +1721,8 @@ export function HeroConstruction() {
         </div>
 
         {/* 6. Bottom Scrubber & Scroll Guidance Bar */}
-        <div className="relative z-20 pb-5 px-4 sm:px-8 max-w-[1440px] w-full mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-white/10">
+        <div className="relative z-20 shrink-0 pb-3 sm:pb-5 px-4 sm:px-8 max-w-[1440px] w-full mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 pt-2 sm:pt-3 border-t border-white/10">
             <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
                 {uiProgress < 0.88
