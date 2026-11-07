@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ArrowUpRight,
@@ -44,6 +44,15 @@ export function ContactForm({ defaultWorkType = 'Cubierta', compact = false }: C
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const muniParam = params.get('municipio');
+    if (muniParam) {
+      setMunicipality(`${muniParam}, Asturias`);
+    }
+  }, []);
 
   const handlePhotoUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;

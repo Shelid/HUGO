@@ -13,6 +13,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { HeroConstruction } from '@/components/HeroConstruction';
+import { AsturiasInteractiveMap } from '@/components/AsturiasInteractiveMap';
 import { ServiceCard } from '@/components/ServiceCard';
 import { WaterproofingCrossSection } from '@/components/WaterproofingCrossSection';
 import { ProcessTimeline } from '@/components/ProcessTimeline';
@@ -86,43 +87,8 @@ export default async function HomePage() {
       {/* 1. CINEMATIC SCROLL-DRIVEN HERO CONSTRUCTION */}
       <HeroConstruction />
 
-      {/* 2. BRAND SIGNATURE & ASTURIAS TECHNICAL BAR */}
-      <section className="border-b border-obsidian/12 bg-[#F6F5F1] py-12 sm:py-16">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-6">
-            <img
-              src="/brand/logo-black.png"
-              alt="RADECO — Logo negro sin fondo"
-              className="h-20 sm:h-24 w-auto object-contain select-none shrink-0"
-            />
-            <div className="border-l border-obsidian/15 pl-6">
-              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-copper block mb-1">
-                Ingeniería y Rehabilitación de Cubiertas
-              </span>
-              <h2 className="font-display text-xl sm:text-2xl font-bold text-obsidian tracking-tight">
-                RADECO · Principado de Asturias
-              </h2>
-              <p className="text-xs sm:text-sm text-obsidian/65 mt-1 max-w-xl">
-                Especialistas en cubiertas, tejados, terrazas y soluciones avanzadas
-                contra filtraciones y humedades.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 justify-center lg:justify-end">
-            {['Oviedo', 'Gijón', 'Mieres', 'Lena', 'Avilés', 'Siero', 'Llanes'].map(
-              (concejo) => (
-                <span
-                  key={concejo}
-                  className="px-3 py-1.5 bg-limestone/70 border border-obsidian/10 font-mono text-[10px] uppercase tracking-[0.18em] text-obsidian/75"
-                >
-                  📍 {concejo}
-                </span>
-              )
-            )}
-          </div>
-        </div>
-      </section>
+      {/* 2. CARTOGRAFÍA TÉCNICA INTERACTIVA & CLIMATOLOGÍA DE ASTURIAS */}
+      <AsturiasInteractiveMap />
 
       {/* 3. SECCIÓN "QUÉ HACEMOS" (SERVICIOS PRINCIPALES) */}
       <section
