@@ -264,25 +264,27 @@ export default async function HomePage() {
       {/* 6. SECCIÓN "POR QUÉ RADECO" (DIFERENCIALES + SELLO DE CALIDAD) */}
       <section
         id="por-que-radeco"
-        className="py-24 sm:py-32 bg-limestone/45 border-b border-obsidian/12"
+        className="py-24 sm:py-32 bg-obsidian text-alabaster border-b border-white/10 relative overflow-hidden"
         aria-labelledby="por-que-heading"
       >
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 space-y-20">
+        <div className="absolute inset-0 bg-arch-grid-dark bg-grid-64 opacity-30 pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8 space-y-20">
           {/* Editorial Intro */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end pb-14 border-b border-obsidian/12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end pb-14 border-b border-white/12">
             <div className="lg:col-span-7">
               <span className="font-mono text-xs uppercase tracking-[0.24em] text-copper block mb-3">
                 03 · Por Qué RADECO
               </span>
               <h2
                 id="por-que-heading"
-                className="font-display text-4xl sm:text-6xl font-semibold tracking-tight text-obsidian leading-[1.05]"
+                className="font-display text-4xl sm:text-6xl font-semibold tracking-tight text-white leading-[1.05]"
               >
                 Calidad que permanece.
               </h2>
             </div>
             <div className="lg:col-span-5">
-              <p className="text-base sm:text-lg text-obsidian/80 leading-relaxed font-medium">
+              <p className="text-base sm:text-lg text-alabaster/80 leading-relaxed font-medium">
                 &ldquo;En RADECO trabajamos para que cada cubierta, terraza e
                 impermeabilización tenga una solución duradera, funcional y
                 cuidadosamente ejecutada.&rdquo;
@@ -297,26 +299,26 @@ export default async function HomePage() {
               return (
                 <div
                   key={pillar.code}
-                  className="bg-[#F6F5F1] border border-obsidian/12 p-8 flex flex-col justify-between hover:border-obsidian/35 transition-colors"
+                  className="bg-charcoal/95 border border-white/12 p-8 flex flex-col justify-between hover:border-copper/60 transition-colors"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-6">
                       <span className="font-mono text-xs font-semibold tracking-[0.22em] text-copper">
                         {pillar.code}
                       </span>
-                      <div className="w-10 h-10 bg-obsidian text-alabaster flex items-center justify-center">
+                      <div className="w-10 h-10 bg-white/5 border border-white/10 text-alabaster flex items-center justify-center">
                         <IconComponent className="w-4 h-4 text-copper" />
                       </div>
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-obsidian mb-3">
+                    <h3 className="font-display text-xl font-semibold text-white mb-3">
                       {pillar.title}
                     </h3>
-                    <p className="text-sm text-obsidian/70 leading-relaxed">
+                    <p className="text-sm text-alabaster/70 leading-relaxed">
                       {pillar.description}
                     </p>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-obsidian/10 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.2em] text-obsidian/45">
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.2em] text-alabaster/45">
                     <span>Estándar Constructivo</span>
                     <span>RADECO Asturias</span>
                   </div>
