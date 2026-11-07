@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    color-scheme: light only;
     --bg-alabaster: #f6f5f1;
     --bg-obsidian: #0b0c0e;
     --accent-copper: #b85d3b;

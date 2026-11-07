@@ -41,14 +41,13 @@ export function Navbar() {
     return null;
   }
 
-  const useSolidGlass = scrolled || !isHome || mobileOpen;
+  // Always keep the Navbar in the clean, high-contrast light architectural theme (#F6F5F1)
+  const useSolidGlass = true;
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        useSolidGlass
-          ? 'py-3 bg-[#F6F5F1]/92 backdrop-blur-xl border-b border-obsidian/10 shadow-[0_8px_32px_rgba(11,12,14,0.05)]'
-          : 'py-5 bg-transparent border-b border-white/10'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#F6F5F1]/96 backdrop-blur-xl border-b border-obsidian/12 shadow-[0_8px_32px_rgba(11,12,14,0.06)] ${
+        scrolled ? 'py-2.5' : 'py-3.5'
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 flex items-center justify-between">

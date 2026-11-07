@@ -91,26 +91,26 @@ export function ProcessTimeline() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 sm:py-32 bg-obsidian text-alabaster overflow-hidden border-y border-white/10"
+      className="relative py-24 sm:py-32 bg-[#F6F5F1] text-obsidian overflow-hidden border-y border-obsidian/12"
       aria-labelledby="proceso-heading"
     >
-      <div className="absolute inset-0 bg-arch-grid-dark bg-grid-64 opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-arch-grid-light bg-grid-64 opacity-60 pointer-events-none" />
 
       <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-16 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-16 border-b border-obsidian/12">
           <div>
             <span className="inline-block font-mono text-xs uppercase tracking-[0.25em] text-copper mb-3">
               Metodología de Ingeniería
             </span>
             <h2
               id="proceso-heading"
-              className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-white"
+              className="font-display text-3xl sm:text-5xl font-semibold tracking-tight text-obsidian"
             >
               Nuestro proceso
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-alabaster/65 max-w-md leading-relaxed">
+          <p className="text-sm sm:text-base text-obsidian/70 max-w-md leading-relaxed">
             Cada obra se desarrolla bajo una secuencia técnica trazable de seis fases,
             garantizando rigor desde la primera inspección hasta la entrega final.
           </p>
@@ -119,7 +119,7 @@ export function ProcessTimeline() {
         {/* Progressive Timeline Container */}
         <div className="relative mt-16">
           {/* Vertical Progress Line (Desktop Center / Mobile Left) */}
-          <div className="absolute left-5 lg:left-1/2 top-0 bottom-0 w-px bg-white/15 -translate-x-1/2" />
+          <div className="absolute left-5 lg:left-1/2 top-0 bottom-0 w-px bg-obsidian/15 -translate-x-1/2" />
           <div
             className="absolute left-5 lg:left-1/2 top-0 w-0.5 bg-copper -translate-x-1/2 transition-all duration-150"
             style={{ height: `${Math.round(fillRatio * 100)}%` }}
@@ -148,8 +148,8 @@ export function ProcessTimeline() {
                     <div
                       className={`p-6 sm:p-8 border transition-all duration-500 ${
                         isReached
-                          ? 'bg-charcoal/95 border-copper/50 shadow-[0_12px_40px_rgba(0,0,0,0.4)]'
-                          : 'bg-white/[0.02] border-white/10'
+                          ? 'bg-white border-copper shadow-[0_14px_36px_rgba(11,12,14,0.08)]'
+                          : 'bg-limestone/45 border-obsidian/12'
                       }`}
                     >
                       <div
@@ -161,13 +161,13 @@ export function ProcessTimeline() {
                           {step.number} — {step.title.toUpperCase()}
                         </span>
                       </div>
-                      <h3 className="font-display text-xl sm:text-2xl font-semibold text-white mb-1.5">
+                      <h3 className="font-display text-xl sm:text-2xl font-semibold text-obsidian mb-1.5">
                         {step.number} — {step.title}
                       </h3>
-                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-alabaster/50 mb-3">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-obsidian/55 mb-3">
                         {step.subtitle}
                       </p>
-                      <p className="text-sm text-alabaster/70 leading-relaxed">
+                      <p className="text-sm text-obsidian/75 leading-relaxed">
                         {step.description}
                       </p>
                     </div>
@@ -178,8 +178,8 @@ export function ProcessTimeline() {
                     <div
                       className={`w-10 h-10 flex items-center justify-center font-mono text-xs font-bold border transition-all duration-500 ${
                         isReached
-                          ? 'bg-copper border-copper text-white scale-110 shadow-[0_0_24px_rgba(184,93,59,0.5)]'
-                          : 'bg-obsidian border-white/25 text-white/50'
+                          ? 'bg-copper border-copper text-white scale-110 shadow-[0_0_20px_rgba(184,93,59,0.35)]'
+                          : 'bg-[#F6F5F1] border-obsidian/25 text-obsidian/60'
                       }`}
                     >
                       {step.number}

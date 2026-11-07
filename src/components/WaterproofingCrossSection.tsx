@@ -158,30 +158,26 @@ export function WaterproofingCrossSection() {
     });
 
     // Camera Zoom & Pan Trajectory based on scroll progress `p` (0..1)
-    // Stop 1 (p=0.0..0.25): Upper-mid tiles & rain impact (s ~ 210, n ~ 170)
-    // Stop 2 (p=0.25..0.50): Ventilated chamber & W1 membrane (s ~ 330, n ~ 135)
-    // Stop 3 (p=0.50..0.75): 100mm XPS insulation, vapor barrier & interior heat (s ~ 370, n ~ 45)
-    // Stop 4 (p=0.75..1.00): Eaves drip edge, zinc gutter & downspout (s ~ 590, n ~ 85)
-    const t12 = smoothstep(0.15, 0.35, p);
-    const t23 = smoothstep(0.42, 0.62, p);
-    const t34 = smoothstep(0.68, 0.88, p);
+    // Keep the entire cross-section, bottom rafter, labels, and zinc gutter well inside the viewport at all times!
+    const t12 = smoothstep(0.12, 0.36, p);
+    const t23 = smoothstep(0.38, 0.64, p);
+    const t34 = smoothstep(0.66, 0.92, p);
 
-    let camS = lerp(220, 320, t12);
-    camS = lerp(camS, 360, t23);
-    camS = lerp(camS, 555, t34);
+    let camS = lerp(210, 300, t12);
+    camS = lerp(camS, 355, t23);
+    camS = lerp(camS, 495, t34);
 
-    let camN = lerp(165, 130, t12);
-    camN = lerp(camN, 50, t23);
-    camN = lerp(camN, 80, t34);
+    let camN = lerp(85, 78, t12);
+    camN = lerp(camN, 55, t23);
+    camN = lerp(camN, 48, t34);
 
     const camFocus = toWorld(camS, camN);
-    const baseFitScale = Math.min(width / (isMobile ? 640 : 780), height / 520);
-    // Gentle zoom-in during middle inspection stages
-    const zoomFactor = 1.08 + Math.sin(p * Math.PI) * 0.16;
+    const baseFitScale = Math.min(width / (isMobile ? 740 : 860), height / 560);
+    const zoomFactor = 1.02 + Math.sin(p * Math.PI) * 0.1;
     const camScale = baseFitScale * zoomFactor;
 
     ctx.save();
-    ctx.translate(width * 0.5, height * 0.52);
+    ctx.translate(width * 0.5, height * 0.45);
     ctx.scale(camScale, camScale);
     ctx.translate(-camFocus.x, -camFocus.y);
 
@@ -989,7 +985,7 @@ export function WaterproofingCrossSection() {
         />
 
         {/* Top Telemetry & Mode Comparison Bar */}
-        <div className="relative z-20 pt-20 sm:pt-24 px-4 sm:px-8 max-w-[1440px] w-full mx-auto flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div className="relative z-20 pt-16 sm:pt-20 px-4 sm:px-8 max-w-[1440px] w-full mx-auto flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-sky-500/15 border border-sky-400/30 font-mono text-[10px] uppercase tracking-[0.2em] text-sky-300">
               <Droplets className="w-3.5 h-3.5 text-sky-400" />
@@ -1005,7 +1001,7 @@ export function WaterproofingCrossSection() {
             <button
               type="button"
               onClick={() => setMode('radeco')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] transition-all ${
                 isRadeco
                   ? 'bg-copper text-white font-semibold shadow-sm'
                   : 'text-white/60 hover:text-white'
@@ -1017,7 +1013,7 @@ export function WaterproofingCrossSection() {
             <button
               type="button"
               onClick={() => setMode('pathology')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] transition-all ${
                 !isRadeco
                   ? 'bg-red-700 text-white font-semibold shadow-sm'
                   : 'text-white/60 hover:text-white'
@@ -1030,11 +1026,11 @@ export function WaterproofingCrossSection() {
         </div>
 
         {/* Center Main Stage: Left Narrative & Telemetry + Right Cross-Section Zoom Canvas */}
-        <div className="relative z-10 flex-1 flex items-center px-4 sm:px-8 max-w-[1440px] w-full mx-auto overflow-hidden">
-          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div className="relative z-10 flex-1 flex items-center px-4 sm:px-8 max-w-[1440px] w-full mx-auto overflow-hidden py-2">
+          <div className="w-full h-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
             {/* Left Column: Zoom Stage Explanation & Live Sensors */}
-            <div className="lg:col-span-5 space-y-4 z-20">
-              <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.22em] text-copper">
+            <div className="lg:col-span-5 space-y-2.5 sm:space-y-3 z-20">
+              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-copper">
                 <span>Zoom Microscópico en Tiempo Real</span>
                 <span>·</span>
                 <span>{Math.round(scrollProgress * 100)}% Recorrido</span>
@@ -1042,40 +1038,40 @@ export function WaterproofingCrossSection() {
 
               <h2
                 id="corte-transversal-heading"
-                className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white leading-[1.12]"
+                className="font-display text-xl sm:text-2xl lg:text-[32px] font-semibold tracking-tight text-white leading-[1.12]"
               >
                 {activeStage.title}
               </h2>
 
-              <p className="text-xs sm:text-sm text-alabaster/75 leading-relaxed">
+              <p className="text-xs sm:text-sm text-alabaster/75 leading-relaxed line-clamp-3">
                 {activeStage.subtitle}
               </p>
 
               {/* Real-Time Telemetry Sensors (4 Live Cards) */}
-              <div className="grid grid-cols-2 gap-2.5 pt-1">
-                <div className="p-3 bg-white/[0.03] border border-white/10">
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-white/50 mb-1">
+              <div className="grid grid-cols-2 gap-2 pt-0.5">
+                <div className="p-2.5 bg-white/[0.03] border border-white/10">
+                  <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/50 mb-0.5">
                     <span>Clima Exterior</span>
-                    <ThermometerSnowflake className="w-3.5 h-3.5 text-sky-400" />
+                    <ThermometerSnowflake className="w-3 h-3 text-sky-400" />
                   </div>
-                  <p className="font-mono text-xs sm:text-sm font-semibold text-sky-300">
+                  <p className="font-mono text-xs font-semibold text-sky-300">
                     8,0 °C · Lluvia Asturias
                   </p>
                 </div>
 
                 <div
-                  className={`p-3 border transition-colors ${
+                  className={`p-2.5 border transition-colors ${
                     isRadeco
                       ? 'bg-amber-500/10 border-amber-400/30'
                       : 'bg-red-950/50 border-red-500/40'
                   }`}
                 >
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-white/60 mb-1">
+                  <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/60 mb-0.5">
                     <span>Temp. Interior</span>
-                    <Flame className="w-3.5 h-3.5 text-amber-400" />
+                    <Flame className="w-3 h-3 text-amber-400" />
                   </div>
                   <p
-                    className={`font-mono text-xs sm:text-sm font-semibold ${
+                    className={`font-mono text-xs font-semibold ${
                       isRadeco ? 'text-amber-300' : 'text-red-300'
                     }`}
                   >
@@ -1083,29 +1079,29 @@ export function WaterproofingCrossSection() {
                   </p>
                 </div>
 
-                <div className="p-3 bg-white/[0.03] border border-white/10">
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-white/50 mb-1">
+                <div className="p-2.5 bg-white/[0.03] border border-white/10">
+                  <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/50 mb-0.5">
                     <span>Microventilación</span>
-                    <Wind className="w-3.5 h-3.5 text-emerald-400" />
+                    <Wind className="w-3 h-3 text-emerald-400" />
                   </div>
-                  <p className="font-mono text-xs sm:text-sm font-semibold text-emerald-300">
+                  <p className="font-mono text-xs font-semibold text-emerald-300">
                     {isRadeco ? 'Cámara 40mm Activa' : 'Sin ventilación (Humedad)'}
                   </p>
                 </div>
 
                 <div
-                  className={`p-3 border transition-colors ${
+                  className={`p-2.5 border transition-colors ${
                     isRadeco
                       ? 'bg-sky-500/10 border-sky-400/30'
                       : 'bg-red-950/50 border-red-500/40'
                   }`}
                 >
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-white/60 mb-1">
+                  <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-wider text-white/60 mb-0.5">
                     <span>Drenaje W1 / Zinc</span>
-                    <Droplets className="w-3.5 h-3.5 text-sky-400" />
+                    <Droplets className="w-3 h-3 text-sky-400" />
                   </div>
                   <p
-                    className={`font-mono text-xs sm:text-sm font-semibold ${
+                    className={`font-mono text-xs font-semibold ${
                       isRadeco ? 'text-sky-300' : 'text-red-300'
                     }`}
                   >
@@ -1115,7 +1111,7 @@ export function WaterproofingCrossSection() {
               </div>
 
               {/* 4-Stage Direct Camera Selector */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-1">
+              <div className="grid grid-cols-4 gap-1.5 pt-0.5">
                 {ZOOM_STAGES.map((st) => {
                   const isCurrent = activeStage.id === st.id;
                   const isDone = scrollProgress >= st.range[1];
@@ -1124,7 +1120,7 @@ export function WaterproofingCrossSection() {
                       key={st.id}
                       type="button"
                       onClick={() => jumpToStage(st)}
-                      className={`px-2.5 py-2 border text-left font-mono text-[10px] uppercase tracking-wider transition-all flex items-center justify-between ${
+                      className={`px-2 py-1.5 border text-left font-mono text-[10px] uppercase tracking-wider transition-all flex items-center justify-between ${
                         isCurrent
                           ? 'border-sky-400 bg-sky-500/20 text-white'
                           : isDone
@@ -1141,7 +1137,7 @@ export function WaterproofingCrossSection() {
             </div>
 
             {/* Right Column: High-DPI Zoom Cross-Section Canvas */}
-            <div className="lg:col-span-7 relative w-full h-[44vh] sm:h-[54vh] lg:h-[72vh] flex items-center justify-center border border-white/10 bg-[#0D0F13]/80">
+            <div className="lg:col-span-7 relative w-full h-[40vh] sm:h-[50vh] lg:h-[66vh] flex items-center justify-center border border-white/10 bg-[#0D0F13]/80">
               <canvas
                 ref={canvasRef}
                 className="w-full h-full block"
@@ -1152,8 +1148,8 @@ export function WaterproofingCrossSection() {
         </div>
 
         {/* Bottom Progress Bar */}
-        <div className="relative z-20 pb-5 px-4 sm:px-8 max-w-[1440px] w-full mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-white/10">
+        <div className="relative z-20 pb-3.5 px-4 sm:px-8 max-w-[1440px] w-full mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2.5 border-t border-white/10">
             <div className="flex items-center gap-3">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
                 Deslice para seguir el recorrido de la gota de lluvia hasta el canalón de zinc

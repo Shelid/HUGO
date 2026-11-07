@@ -88,8 +88,9 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="es">
+    <html lang="es" style={{ colorScheme: 'light' }}>
       <head>
+        <meta name="color-scheme" content="light only" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

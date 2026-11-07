@@ -20,15 +20,15 @@ export function QualityBadge({
   const displayItems = items.length > 0 ? items : DEFAULT_SEAL_ITEMS;
 
   return (
-    <div className="relative bg-obsidian text-alabaster border border-bronze/40 p-8 sm:p-10 overflow-hidden shadow-[0_24px_60px_rgba(11,12,14,0.22)]">
+    <div className="relative bg-[#F6F5F1] text-obsidian border-2 border-obsidian/15 p-8 sm:p-10 overflow-hidden shadow-[0_18px_50px_rgba(11,12,14,0.07)]">
       {/* Subtle Architectural Blueprint Grid */}
-      <div className="absolute inset-0 bg-arch-grid-dark bg-grid-40 opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-arch-grid-light bg-grid-40 opacity-50 pointer-events-none" />
 
       {/* Precision Corner Framing */}
-      <div className="absolute top-3 left-3 w-3.5 h-3.5 border-t border-l border-bronze/70" />
-      <div className="absolute top-3 right-3 w-3.5 h-3.5 border-t border-r border-bronze/70" />
-      <div className="absolute bottom-3 left-3 w-3.5 h-3.5 border-b border-l border-bronze/70" />
-      <div className="absolute bottom-3 right-3 w-3.5 h-3.5 border-b border-r border-bronze/70" />
+      <div className="absolute top-3 left-3 w-3.5 h-3.5 border-t-2 border-l-2 border-copper" />
+      <div className="absolute top-3 right-3 w-3.5 h-3.5 border-t-2 border-r-2 border-copper" />
+      <div className="absolute bottom-3 left-3 w-3.5 h-3.5 border-b-2 border-l-2 border-copper" />
+      <div className="absolute bottom-3 right-3 w-3.5 h-3.5 border-b-2 border-r-2 border-copper" />
 
       <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8">
         {/* Engraved Circular RADECO Certification Seal */}
@@ -36,7 +36,7 @@ export function QualityBadge({
           {/* Outer Rotating/Engraved SVG Ring */}
           <svg
             viewBox="0 0 160 160"
-            className="absolute inset-0 w-full h-full text-bronze"
+            className="absolute inset-0 w-full h-full text-copper"
             aria-hidden="true"
           >
             <circle
@@ -62,9 +62,10 @@ export function QualityBadge({
               fill="none"
             />
             <text
-              fill="#F6F5F1"
+              fill="#0B0C0E"
               fontSize="7.5"
               fontFamily="monospace"
+              fontWeight="600"
               letterSpacing="2.9"
             >
               <textPath href="#sealCirclePath" startOffset="4%">
@@ -74,10 +75,11 @@ export function QualityBadge({
           </svg>
 
           {/* Center Alabaster Medallion with Pure Black RADECO Emblem */}
-          <div className="w-20 h-20 rounded-full bg-alabaster p-2.5 flex items-center justify-center shadow-inner border border-bronze/50">
+          <div className="w-20 h-20 rounded-full bg-white p-2.5 flex items-center justify-center shadow-md border border-obsidian/15">
             <img
               src="/brand/emblem-black.png"
               alt="Sello RADECO"
+              decoding="async"
               className="w-full h-full object-contain"
             />
           </div>
@@ -85,15 +87,15 @@ export function QualityBadge({
 
         {/* Right: Certification Details & Checkpoints */}
         <div className="flex-1 text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-bronze/15 border border-bronze/40 font-mono text-[10px] uppercase tracking-[0.24em] text-bronze mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-copper/10 border border-copper/30 font-mono text-[10px] uppercase tracking-[0.24em] text-copper font-semibold mb-3">
             <span>Certificación Interna de Ejecución · {municipality}</span>
           </div>
 
-          <h3 className="font-display text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-2">
+          <h3 className="font-display text-2xl sm:text-3xl font-semibold text-obsidian tracking-tight mb-2">
             Sello de Calidad RADECO
           </h3>
 
-          <p className="text-xs sm:text-sm text-alabaster/65 leading-relaxed mb-6 max-w-xl">
+          <p className="text-xs sm:text-sm text-obsidian/70 leading-relaxed mb-6 max-w-xl">
             Cada proyecto ejecutado por RADECO supera una verificación técnica de
             estanqueidad, fijación mecánica y rematería antes de su entrega.
           </p>
@@ -102,12 +104,12 @@ export function QualityBadge({
             {displayItems.map((item) => (
               <div
                 key={item}
-                className="flex items-center gap-3 px-4 py-3 bg-white/[0.04] border border-white/10"
+                className="flex items-center gap-3 px-4 py-3 bg-white border border-obsidian/12 shadow-sm"
               >
-                <span className="w-5 h-5 rounded-full bg-bronze/25 border border-bronze text-alabaster flex items-center justify-center shrink-0">
+                <span className="w-5 h-5 rounded-full bg-copper text-white flex items-center justify-center shrink-0">
                   <Check className="w-3 h-3" />
                 </span>
-                <span className="text-xs sm:text-sm font-medium text-white tracking-wide">
+                <span className="text-xs sm:text-sm font-semibold text-obsidian tracking-wide">
                   {item}
                 </span>
               </div>
